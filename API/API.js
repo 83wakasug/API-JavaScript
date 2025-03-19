@@ -3,7 +3,7 @@ const url = 'https://jsonplaceholder.typicode.com/users';
 fetch(url)
   .then((response) => response.json())
   .then((data) => {
-    const main = document.getElementById("main");
+    const main = document.getElementById("container");
 
     data.forEach(info => {
       const name = info.name;
@@ -14,7 +14,7 @@ fetch(url)
       card.className = "card";
 
       const container = document.createElement("div");
-      container.className = "container";
+      container.className = "div_container";
 
       const sName = document.createElement("span");
       sName.innerHTML = `<strong>Name:</strong> ${name}<br>`;
@@ -33,22 +33,23 @@ fetch(url)
       container.appendChild(btn);
       card.appendChild(container);
 
-      btn.addEventListener("click", () => detail(info, card, btn,container));
+      btn.addEventListener("click", () => detail(info, card, btn, container));
 
       main.appendChild(card);
     });
   })
   .catch(error => console.log(error));
 
-function detail(info, card, btn,container) {
+function detail(info, card, btn, container) {
   const existingDetails = card.querySelector(".div_details");
-  btn.remove();
 
   if (existingDetails) {
     existingDetails.remove();
-    btn.innerHTML = "details";
+    container.appendChild(btn); // ボタンを元に戻す
     return;
   }
+
+  container.removeChild(btn); // ボタンを削除
 
   const city = info.address.city;
   const phone = info.phone;
@@ -64,19 +65,9 @@ function detail(info, card, btn,container) {
   const sCompanyName = document.createElement("span");
   sCompanyName.innerHTML = `<strong>Company Name:</strong> ${companyName}<br>`;
 
-
-  const btnDelete = document.createElement("button");
-  btnDelete.className = "btn_delete";
-  btnDelete.textContent = "close";
-
   const closeBtn = document.createElement("button");
-  closeBtn.innerText = "Close";
+  closeBtn.textContent = "close";
   closeBtn.className = "close-btn"; // スタイリング用のクラス
-  
-
-  
-
-
 
   div.appendChild(sCity);
   div.appendChild(sPhone);
@@ -84,11 +75,9 @@ function detail(info, card, btn,container) {
   div.appendChild(closeBtn);
   card.appendChild(div);
 
-  closeBtn.addEventListener("click", ()=> {
+  closeBtn.addEventListener("click", () => {
     div.remove();
-    container.appendChild(btn);
-
+    container.appendChild(btn); // 「details」ボタンを元に戻す
   });
-
-
 }
+
