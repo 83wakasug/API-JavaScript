@@ -1,55 +1,62 @@
 const url = 'https://jsonplaceholder.typicode.com/users';
 
-fetch(url)
-  .then((response) => response.json())
-  .then((data) => {
-    const main = document.getElementById("container");
+async function fetchUsers() {
+  try {
+    const response = await fetch(url);
+    const data = await response.json();
+    renderUsers(data);
+  } catch (error) {
+    console.log(error);
+  }
+}
 
-    data.forEach(info => {
-      const name = info.name;
-      const username = info.username;
-      const email = info.email;
+function renderUsers(data) {
+  const main = document.getElementById("container");
 
-      const card = document.createElement("div");
-      card.className = "card";
+  data.forEach(info => {
+    const name = info.name;
+    const username = info.username;
+    const email = info.email;
 
-      const container = document.createElement("div");
-      container.className = "div_container";
+    const card = document.createElement("div");
+    card.className = "card";
 
-      const sName = document.createElement("span");
-      sName.innerHTML = `<strong>Name:</strong> ${name}<br>`;
-      const sUserName = document.createElement("span");
-      sUserName.innerHTML = `<strong>Username:</strong> ${username}<br>`;
-      const sEmail = document.createElement("span");
-      sEmail.innerHTML = `<strong>Email:</strong> ${email}<br>`;
+    const container = document.createElement("div");
+    container.className = "div_container";
 
-      const btn = document.createElement("button");
-      btn.className = "btn_detail";
-      btn.textContent = "details";
+    const sName = document.createElement("span");
+    sName.innerHTML = `<strong>Name:</strong> ${name}<br>`;
+    const sUserName = document.createElement("span");
+    sUserName.innerHTML = `<strong>Username:</strong> ${username}<br>`;
+    const sEmail = document.createElement("span");
+    sEmail.innerHTML = `<strong>Email:</strong> ${email}<br>`;
 
-      container.appendChild(sName);
-      container.appendChild(sUserName);
-      container.appendChild(sEmail);
-      container.appendChild(btn);
-      card.appendChild(container);
+    const btn = document.createElement("button");
+    btn.className = "btn_detail";
+    btn.textContent = "details";
 
-      btn.addEventListener("click", () => detail(info, card, btn, container));
+    container.appendChild(sName);
+    container.appendChild(sUserName);
+    container.appendChild(sEmail);
+    container.appendChild(btn);
+    card.appendChild(container);
 
-      main.appendChild(card);
-    });
-  })
-  .catch(error => console.log(error));
+    btn.addEventListener("click", () => detail(info, card, btn, container));
+
+    main.appendChild(card);
+  });
+}
 
 function detail(info, card, btn, container) {
   const existingDetails = card.querySelector(".div_details");
 
   if (existingDetails) {
     existingDetails.remove();
-    container.appendChild(btn); // ボタンを元に戻す
+    container.appendChild(btn); 
     return;
   }
 
-  container.removeChild(btn); // ボタンを削除
+  container.removeChild(btn); 
 
   const city = info.address.city;
   const phone = info.phone;
@@ -67,7 +74,7 @@ function detail(info, card, btn, container) {
 
   const closeBtn = document.createElement("button");
   closeBtn.textContent = "close";
-  closeBtn.className = "close-btn"; // スタイリング用のクラス
+  closeBtn.className = "close-btn"; 
 
   div.appendChild(sCity);
   div.appendChild(sPhone);
@@ -77,7 +84,9 @@ function detail(info, card, btn, container) {
 
   closeBtn.addEventListener("click", () => {
     div.remove();
-    container.appendChild(btn); // 「details」ボタンを元に戻す
+    container.appendChild(btn);
   });
 }
 
+
+fetchUsers();
